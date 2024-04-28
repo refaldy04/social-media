@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/components/my_button.dart';
@@ -32,22 +33,33 @@ class _RegisterPageState extends State<RegisterPage> {
     if (passwordController.text != confirmPwController.text) {
       Navigator.pop(context);
 
-      displayMessageToUser("Password don't match!", context);
-    } else {
-      try {
-        // create user with firebase
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: emailController.text, password: passwordController.text);
-        if (mounted) {
-          Navigator.pop(context);
-        }
-      } on FirebaseAuthException catch (e) {
-        if (mounted) {
-          Navigator.pop(context);
+      return displayMessageToUser("Password don't match!", context);
+    }
 
-          displayMessageToUser(e.code, context);
-        }
-      }
+    try {
+      // create user with firebase
+      UserCredential? userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
+
+      // store data user to firebase
+      createUserDocument(userCredential);
+
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      displayMessageToUser(e.code, context);
+    }
+  }
+
+  Future<void> createUserDocument(UserCredential? userCredential) async {
+    if (userCredential != null && userCredential.user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set({
+        'email': userCredential.user!.email,
+        'username': usernameController.text
+      });
     }
   }
 
