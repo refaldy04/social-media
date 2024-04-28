@@ -12,7 +12,7 @@ class AuthPage extends StatelessWidget {
       body: StreamBuilder(
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const HomePage();
+            return HomePage();
           } else {
             return const LoginOrRegister();
           }
