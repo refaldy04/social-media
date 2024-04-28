@@ -36,15 +36,17 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       try {
         // create user with firebase
-        UserCredential? userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: emailController.text, password: passwordController.text);
-
-        Navigator.pop(context);
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text);
+        if (mounted) {
+          Navigator.pop(context);
+        }
       } on FirebaseAuthException catch (e) {
-        Navigator.pop(context);
+        if (mounted) {
+          Navigator.pop(context);
 
-        displayMessageToUser(e.code, context);
+          displayMessageToUser(e.code, context);
+        }
       }
     }
   }
