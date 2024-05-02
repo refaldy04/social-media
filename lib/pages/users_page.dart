@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:social_media/components/my_back_button.dart';
 import 'package:social_media/components/my_list_tile.dart';
 import 'package:social_media/helper/helper_function.dart';
